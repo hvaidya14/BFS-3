@@ -53,3 +53,56 @@ class Solution {
         return node1;
     }
 }
+
+class Solution {
+    public List<String> removeInvalidParentheses(String s) {
+        Queue<String> q = new LinkedList<>();
+        List<String> result = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        boolean flag = false;
+        q.add(s);
+        set.add(s);
+        while(!q.isEmpty()) {
+            String curr = q.poll();
+            if(isValid(curr)) {
+                //if(!set.contains(curr)) {
+                    //set.add(curr);
+                    result.add(curr);
+                //}
+                flag=true;
+            } else if( flag == false ){
+                for(int j=0;j<curr.length();j++) {
+                    char c = curr.charAt(j);
+                    if (c >= 'a' && c<= 'z') {
+                        continue;
+                    }
+                    String child = curr.substring(0,j) + curr.substring(j+1);
+                    if(!set.contains(child)) {
+                        set.add(child);
+                        q.add(child);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean isValid(String str) {
+        Stack<Character> st = new Stack<>();
+        for (char c: str.toCharArray()) {
+            if (c >= 'a' && c<= 'z') {
+                continue;
+            }
+            if (c == '(') {
+                st.push(')');
+            } else if (!st.isEmpty() &&  st.peek() != c) {
+                return false;
+            } else if (!st.isEmpty() &&  st.peek() == c) {
+                st.pop();
+            } else if (st.isEmpty()) {
+                return false;
+            }
+        }
+        return st.isEmpty();
+    }
+}
